@@ -10,3 +10,7 @@ output_test/
 *.xlsx~
 .DS_Store
 Thumbs.db
+
+# 演示视频可放入 demos/；若文件过大（>50MB）推 GitHub 前请先压缩
+# demos/*.mp4
+# demos/*.webm
