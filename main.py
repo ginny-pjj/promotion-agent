@@ -1,6 +1,10 @@
 import argparse
 import json
+import sys
 from pathlib import Path
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 from excel_writer import load_template_accounts, update_workbook
 from extractor import parse_advance, parse_doujia

@@ -1,8 +1,11 @@
+from datetime import date
 from pathlib import Path
 
 from openpyxl import load_workbook
 
 from models import AdvanceRecord, DoujiaRecord, Issue
+
+DATE_FORMAT = "yyyy-mm-dd"
 
 
 def _collect_issue_accounts(
@@ -73,6 +76,7 @@ def update_workbook(
     doujia_by_account = {item.account: item for item in doujia_records}
     advance_by_account = {item.account: item for item in advance_records}
     issue_accounts = _collect_issue_accounts(issues, doujia_records, advance_records)
+    expected_date_col = headers.get("预计打款日期")
 
     for row in sheet.iter_rows(min_row=header_row + 1):
         account = str(row[headers["抖音昵称"] - 1].value or "").strip()
@@ -80,14 +84,29 @@ def update_workbook(
             continue
         doujia = doujia_by_account.get(account)
         advance = advance_by_account.get(account)
+        needs_review = account in issue_accounts
+        remark_parts: list[str] = []
+
         if doujia:
             row[headers["抖加"] - 1].value = doujia.doujia_amount
             row[headers["抖加支付人"] - 1].value = doujia.doujia_payer
         if advance:
             row[headers["打款人"] - 1].value = advance.payer
-            row[headers["打款日期"] - 1].value = advance.expected_payment_date
-        if account in issue_accounts and "备注" in headers:
-            row[headers["备注"] - 1].value = "待人工确认"
+            if advance.expected_payment_date:
+                if expected_date_col:
+                    _write_date_cell(row[expected_date_col - 1], advance.expected_payment_date)
+                else:
+                    remark_parts.append(f"预计打款：{advance.expected_payment_date.isoformat()}")
+            needs_review = True
+
+        if needs_review and "备注" in headers:
+            remark_parts.insert(0, "待人工确认")
+            row[headers["备注"] - 1].value = "；".join(remark_parts)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(output)
+
+
+def _write_date_cell(cell, value: date) -> None:
+    cell.value = value
+    cell.number_format = DATE_FORMAT

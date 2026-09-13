@@ -7,6 +7,7 @@ venv/
 web_output/
 output/
 output_test/
+output_p0/
 *.xlsx~
 .DS_Store
 Thumbs.db
