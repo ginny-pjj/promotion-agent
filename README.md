@@ -147,9 +147,9 @@ promotion-agent/
 ├── data/
 │   └── promotion_accounts_template.xlsx   # 推广账号表模板（只读）
 │
-├── demos/                    # ★ 演示视频 + 示例文本放这里
+├── demos/                    # 演示视频 + 示例输入文本
 │   ├── demo-A-笔数与日期异常.mp4
-│   ├── demo-B-正常版本.mp4          # 可选：无异常对照
+│   ├── demo-B-正常版本.mp4          # 无异常对照
 │   ├── sample-A-doujia.txt
 │   ├── sample-A-advance.txt
 │   ├── sample-C-doujia.txt          # 账号名不匹配示例
@@ -164,7 +164,7 @@ promotion-agent/
     └── test_human_review.py
 ```
 
-### 哪些文件夹「看起来乱」但可以忽略？
+### 可忽略的目录
 
 | 类型 | 文件夹 | 说明 |
 |---|---|---|
